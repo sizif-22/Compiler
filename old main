@@ -1,0 +1,125 @@
+#include <iostream>
+// #include <stack>
+// #include <map>
+// #include <string>
+// #include <fstream>
+// #include <vector>
+#include "parsingTable.h"
+#include "grammar.h"
+#include "first&follow.h"
+using namespace std;
+
+// Example parsing table
+// map<string, map<string, vector<string>>> parsingTable = {
+//     {"Exp", {{"(", {"Term", "Expr"}}, {"id", {"Term", "Expr"}}}},
+//     {"Expr", {{"+", {"+", "Term", "Expr"}}, {"-", {"-", "Term", "Expr"}}, {"$", {"ε"}}, {")", {"ε"}}}},
+//     {"Term", {{"(", {"Factor", "Termp"}}, {"id", {"Factor", "Termp"}}}},
+//     {"Termp", {{"*", {"*", "Factor", "Termp"}}, {"/", {"/", "Factor", "Termp"}}, {"$", {"ε"}}, {"+", {"ε"}}, {"-", {"ε"}}, {")", {"ε"}}}},
+//     {"Factor", {{"(", {"(", "Exp", ")"}}, {"id", {"id"}}}}};
+// vector<map<string, string>> getTokens()
+// {
+//      // get tokens...
+//      vector<map<string, string>> tokens;
+//      string filename = "./input.txt";
+//      ifstream inFile(filename);
+//      string line;
+//      getline(inFile, line);
+//      if (line == "")
+//      {
+//           return {{"", ""}};
+//      }
+//      string token = "";
+//      for (int i = 0; i < line.length(); i++)
+//      {
+//           if (line[i] == ' ')
+//           {
+//                tokens.push_back({token, token});
+//                token = "";
+//           }
+//           else
+//           {
+//                token += line[i];
+//           }
+//      }
+//      tokens.push_back({token, token});
+//      for (int i = 0; i < tokens.size(); i++)
+//      {
+//           tokens[i]["key"] for (const auto &pair : tokens[i])
+//           {
+//                cout << pair.first;
+//           }
+//      }
+//      return tokens;
+// }
+
+// vector<string> tokens = {"id", "+", "(", "id", "-", "id", ")", "/", "id", "$"};
+// vector<string> tokens = {"id", "+", "(", "id", "-", "id", "/", "id", "$"};
+
+// void parse()
+// {
+//      stack<string> parseStack;
+//      parseStack.push("$");
+//      parseStack.push("Exp");
+
+//      int index = 0;
+//      string currentToken = tokens[index];
+
+//      while (!parseStack.empty())
+//      {
+//           string top = parseStack.top();
+//           parseStack.pop();
+
+//           if (top == "ε")
+//                continue;
+
+//           if (top == currentToken)
+//           {
+//                cout << "Matched: " << top << endl;
+//                index++;
+//                if (index == tokens.size())
+//                {
+//                     break;
+//                }
+//                currentToken = tokens[index];
+//           }
+//           else if (parsingTable.count(top) && parsingTable[top].count(currentToken))
+//           {
+//                vector<string> production = parsingTable[top][currentToken];
+//                cout << top << " -> ";
+//                for (const string &sym : production)
+//                     cout << sym << " ";
+//                cout << endl;
+
+//                // Push in reverse
+//                for (int i = production.size() - 1; i >= 0; i--)
+//                {
+//                     parseStack.push(production[i]);
+//                }
+//           }
+//           else
+//           {
+//                cout << "Syntax error at token: " << currentToken << endl;
+//                return;
+//           }
+//      }
+
+//      if (currentToken == "$")
+//      {
+//           cout << "Parsing successful!" << endl;
+//      }
+//      else
+//      {
+//           cout << "Unexpected tokens remaining." << endl;
+//      }
+// }
+int main()
+{
+     // printGrammar();
+     cout<<"printFirstTable\n";
+     printFirstTable();
+     cout<<"printFollowTable\n";
+     printFollowTable();
+     printParsingTable();
+     // parse();
+     return 0;
+}
