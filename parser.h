@@ -12,38 +12,77 @@
 #include "first&follow.h"
 using namespace std;
 
-vector<string> readTokens()
+// vector<string> readTokens()
+// {
+//      string fileName = "./input.txt";
+//      vector<string> tokens;
+//      ifstream inFile(fileName);
+//      string line = "";
+//      getline(inFile, line);
+//      string word = "";
+//      line = trim(line);
+//      for (int i = 0; i < line.length(); i++)
+//      {
+//           if (line[i] == ' ')
+//           {
+//                tokens.push_back(word);
+//                word = "";
+//                continue;
+//           }
+//           word += line[i];
+//      }
+//      tokens.push_back(word);
+//      tokens.push_back("$");
+//      return tokens;
+// }
+
+vector<map<string, string>> getTokens()
 {
-     string fileName = "./input.txt";
-     vector<string> tokens;
-     ifstream inFile(fileName);
-     string line = "";
-     getline(inFile, line);
-     string word = "";
-     line = trim(line);
-     for (int i = 0; i < line.length(); i++)
+     // get tokens...
+     vector<map<string, string>> tokens;
+     string filename = "./tokens.txt";
+     ifstream inFile(filename);
+     string line;
+     while (getline(inFile, line))
      {
-          if (line[i] == ' ')
+          map<string, string> token = {};
+          if (line == "")
           {
-               tokens.push_back(word);
-               word = "";
                continue;
           }
-          word += line[i];
+          else
+          {
+               size_t pos = line.find('|');
+               string left = line.substr(0, pos);
+               string right = line.substr(pos + 1);
+               token[left] = right;
+               tokens.push_back(token);
+          }
      }
-     tokens.push_back(word);
-     tokens.push_back("$");
+     map<string, string> d;
+     d["$"] = "$";
+     tokens.push_back(d);
+     for (auto &vec : tokens)
+     {
+          for (auto &pair : vec)
+          {
+               cout << pair.first << " | " << pair.second << endl;
+          }
+     }
+
      return tokens;
 }
-vector<string> tokens = readTokens();
-void printTokens()
-{
-     cout << endl;
-     for (auto &token : tokens)
-     {
-          cout << token << endl;
-     }
-}
+
+vector<map<string, string>> tokens = getTokens();
+// vector<string> tokens = readTokens();
+// void printTokens()
+// {
+//      cout << endl;
+//      for (auto &token : tokens)
+//      {
+//           cout << token << endl;
+//      }
+// }
 map<string, map<string, vector<string>>> parsingTable = CalculateParsingTable();
 void parse()
 {
@@ -52,7 +91,12 @@ void parse()
      parseStack.push(STARTSYMBOL);
 
      int index = 0;
-     string currentToken = tokens[index];
+     // string currentToken = tokens[index];
+     string currentToken = "";
+     for (auto &pair : tokens[index])
+     {
+          currentToken = pair.first;
+     }
 
      while (!parseStack.empty())
      {
@@ -70,7 +114,11 @@ void parse()
                {
                     break;
                }
-               currentToken = tokens[index];
+               currentToken = "";
+               for (auto &pair : tokens[index])
+               {
+                    currentToken = pair.first;
+               }
           }
           else if (parsingTable.count(top) && parsingTable[top].count(currentToken))
           {
