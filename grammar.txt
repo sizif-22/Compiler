@@ -1,3 +1,4 @@
-Decl ::= T id L ;
-L ::= , id L | ε
-T ::= int | float | char
+Graph ::= Tuple G
+G ::= - Graph | ε
+Tuple ::= ( int space T )
+T ::= int | color

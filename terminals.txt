@@ -1,6 +1,6 @@
-;
-,
+(
 int
-float
-char
-id
+)
+-
+color
+space

@@ -8,6 +8,7 @@
           "utility": "cpp",
           "xstring": "cpp",
           "set": "cpp",
-          "xtree": "cpp"
+          "xtree": "cpp",
+          "iosfwd": "cpp"
      }
 }

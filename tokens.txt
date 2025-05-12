@@ -1,7 +1,0 @@
-int|int
-id|x
-,|comma
-id|y
-,|comma
-id|z
-;|;
