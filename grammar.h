@@ -55,7 +55,6 @@ vector<vector<string>> calculateRight(string line, size_t pos)
      vector<string> stringVector;
      string word = "";
      string right = trim(line.substr(pos));
-     // cout << "right string : " << right << endl;
      for (int i = 0; i < right.length(); i++)
      {
           if (right[i] == '|')

@@ -15,90 +15,76 @@ bool contains(const vector<string> &array, const string &key)
 {
      return find(array.begin(), array.end(), key) != array.end();
 }
-
-// set<string> calculateFirst(const string &symbol, map<string, set<string>> &memo);
+void printFirstTable(map<string, map<string, vector<string>>> first);
+void printFollowTable(map<string, set<string>> followTable);
 map<string, vector<string>> calculateFirst(const string &symbol, map<string, map<string, vector<string>>> &memo);
 
-// set<string> calculateFirstForRule(const vector<string> &rule, map<string, set<string>> &memo)
-map<string, vector<string>> calculateFirstForRule(const vector<string> &rule, map<string, map<string, vector<string>>> &memo)
+pair<string, vector<string>> calculateFirstForRule(const vector<string> &rule, map<string, map<string, vector<string>>> &memo)
 {
-     // set<string> result;
-     map<string, vector<string>> result;
-
-
-          const string &symbol = rule[0];
-          if (contains(TERMINALS, symbol))
+     pair<string, vector<string>> result;
+     const string &symbol = rule[0];
+     if (contains(TERMINALS, symbol))
+     {
+          result = {symbol, rule};
+          return result;
+     }
+     else if (symbol == EMPTYSYMBOL)
+     {
+          result = {EMPTYSYMBOL, rule};
+          return result;
+     }
+     else if (contains(NONTERMINALS, symbol))
+     {
+          map<string, vector<string>> firstSet = calculateFirst(symbol, memo);
+          for (auto &fs : firstSet)
           {
-               result[symbol] = rule;
-               return result;
+               result = {fs.first, rule};
           }
-          else if (symbol == EMPTYSYMBOL)
-          {
-               result[EMPTYSYMBOL] = rule;
-               return result;
-          }
-          else if (contains(NONTERMINALS, symbol))
-          {
-               // set<string> firstSet = calculateFirst(symbol, memo);
-               map<string, vector<string>> firstSet = calculateFirst(symbol, memo);
-               // result.insert(firstSet.begin(), firstSet.end());
-               for(auto& fs : firstSet){
-                    result[fs.first] = rule;
-               }
-
-               if (firstSet.find(EMPTYSYMBOL) == firstSet.end())
-                    return result;
-               else
-                    result.erase(EMPTYSYMBOL);
-          }
-          else
-          {
-               result["Syntax Error"] = {};
-               return result;
-          }
-     
-
-     result[EMPTYSYMBOL] = {};
+     }
+     else
+     {
+          result = {"Syntax Error", {}};
+          return result;
+     }
      return result;
 }
 
-// set<string> calculateFirst(const string &symbol, map<string, set<string>> &memo)
 map<string, vector<string>> calculateFirst(const string &symbol, map<string, map<string, vector<string>>> &memo)
 {
-     // if (memo.find(symbol) != memo.end())
-     //      return memo[symbol];
-
-     // set<string> result;
      map<string, vector<string>> result;
      for (const auto &rule : GRAMMAR[symbol])
      {
-          // set<string> ruleFirst = calculateFirstForRule(rule, memo);
-          map<string, vector<string>> ruleFirst = calculateFirstForRule(rule, memo);
-          result.insert(ruleFirst.begin(), ruleFirst.end());
+          pair<string, vector<string>> ruleFirst = calculateFirstForRule(rule, memo);
+          result.insert(ruleFirst);
      }
-
      memo[symbol] = result;
      return result;
 }
 
-// map<string, set<string>> FirstTable()
 map<string, map<string, vector<string>>> FirstTable()
 {
-     // map<string, set<string>> firstTable;
      map<string, map<string, vector<string>>> firstTable;
      for (const auto &nt : NONTERMINALS)
      {
-          firstTable[nt] = calculateFirst(nt, firstTable);
+
+          if (!firstTable.count(nt))
+          {
+               cout << "Calculate.." << nt << endl;
+               firstTable[nt] = calculateFirst(nt, firstTable);
+          }
+          else
+          {
+               cout << "skip.." << nt << endl;
+          }
      }
      return firstTable;
 }
 
-map<string, set<string>> FollowTable()
+map<string, set<string>> FollowTable(map<string, map<string, vector<string>>> first)
 {
      map<string, set<string>> follow;
-     // map<string, set<string>> first = FirstTable();
-     map<string, map<string, vector<string>>> first = FirstTable();
-
+     // map<string, map<string, vector<string>>> first = FirstTable();
+     printFirstTable(first);
      for (const auto &nt : NONTERMINALS)
      {
           follow[nt] = {};
@@ -137,7 +123,6 @@ map<string, set<string>> FollowTable()
                                    set<string> vals = {};
                                    for (auto &val : first[next])
                                    {
-                                        // firstNext = val.first;
                                         vals.insert(val.first);
                                    }
                                    firstNext = vals;
@@ -174,9 +159,9 @@ map<string, set<string>> FollowTable()
      return follow;
 }
 
-void printFollowTable()
+void printFollowTable(map<string, set<string>> followTable)
 {
-     map<string, set<string>> followTable = FollowTable();
+     // map<string, set<string>> followTable = FollowTable();
      cout << "\n=== FOLLOW Table ===\n";
 
      for (const auto &[nonTerminal, followSet] : followTable)
@@ -193,9 +178,9 @@ void printFollowTable()
      }
 }
 
-void printFirstTable()
+void printFirstTable(map<string, map<string, vector<string>>> first)
 {
-     map<string, map<string, vector<string>>> first = FirstTable();
+     // map<string, map<string, vector<string>>> first = FirstTable();
      cout << "\n=== FIRST Table ===\n";
 
      for (const auto &[nonTerminal, productions] : first)

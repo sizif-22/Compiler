@@ -28,8 +28,7 @@ vector<pair<string, string>> Scanner()
      set<string> colors = {"red", "green", "blue"};
      string filename = "./input.txt";
      ifstream inFile(filename);
-     ofstream print("./tokens.txt");
-     set<char> delimiter = {'(', ')', '-'};
+     map<char, string> delimiter = {{'(', "("}, {')', ")"}, {'-', "-"}, {' ', "space"}};
      string line;
      getline(inFile, line);
      string str = "";
@@ -53,17 +52,7 @@ vector<pair<string, string>> Scanner()
                          break;
                     }
                }
-               if (delimiter.count(line[i]))
-               {
-
-                    string delim = "";
-                    delim += line[i];
-                    tokens.push_back({delim, delim});
-               }
-               else
-               {
-                    tokens.push_back({"space", "space"});
-               }
+               tokens.push_back({delimiter[line[i]], delimiter[line[i]]});
                str = "";
           }
           else
@@ -72,17 +61,19 @@ vector<pair<string, string>> Scanner()
           }
      }
      if (str != "")
-          if (isNumber(str))
+     {
+          if ((isNumber(str)))
           {
-               print << "int|" << str << endl;
+               tokens.push_back({"int", str});
           }
           else if (colors.count(str))
           {
-               print << "color|" << str << endl;
+               tokens.push_back({"color", str});
           }
           else
           {
-               print << str << "|" << str << endl;
+               cout << "Error !" << endl;
           }
+     }
      return tokens;
 }

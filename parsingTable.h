@@ -14,7 +14,7 @@ map<string, map<string, vector<string>>> CalculateParsingTable()
 {
      map<string, map<string, vector<string>>> parsingTable = {};
      map<string, map<string, vector<string>>> firstTable = FirstTable();
-     map<string, set<string>> followTable = FollowTable();
+     map<string, set<string>> followTable = FollowTable(firstTable);
      for (auto &pair : firstTable)
      {
           for (auto &subMap : pair.second)
